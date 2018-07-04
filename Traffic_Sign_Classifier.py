@@ -1,30 +1,3 @@
-
-# coding: utf-8
-
-# # Self-Driving Car Engineer Nanodegree
-# 
-# ## Deep Learning
-# 
-# ## Project: Build a Traffic Sign Recognition Classifier
-# 
-# In this notebook, a template is provided for you to implement your functionality in stages, which is required to successfully complete this project. If additional code is required that cannot be included in the notebook, be sure that the Python code is successfully imported and included in your submission if necessary. 
-# 
-# > **Note**: Once you have completed all of the code implementations, you need to finalize your work by exporting the iPython Notebook as an HTML document. Before exporting the notebook to html, all of the code cells need to have been run so that reviewers can see the final implementation and output. You can then export the notebook by using the menu above and navigating to  \n",
-#     "**File -> Download as -> HTML (.html)**. Include the finished document along with this notebook as your submission. 
-# 
-# In addition to implementing code, there is a writeup to complete. The writeup should be completed in a separate file, which can be either a markdown file or a pdf document. There is a [write up template](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/writeup_template.md) that can be used to guide the writing process. Completing the code template and writeup template will cover all of the [rubric points](https://review.udacity.com/#!/rubrics/481/view) for this project.
-# 
-# The [rubric](https://review.udacity.com/#!/rubrics/481/view) contains "Stand Out Suggestions" for enhancing the project beyond the minimum requirements. The stand out suggestions are optional. If you decide to pursue the "stand out suggestions", you can include the code in this Ipython notebook and also discuss the results in the writeup file.
-# 
-# 
-# >**Note:** Code and Markdown cells can be executed using the **Shift + Enter** keyboard shortcut. In addition, Markdown cells can be edited by typically double-clicking the cell to enter edit mode.
-
-# ---
-# ## Step 0: Load The Data
-
-# In[1]:
-
-
 # Import Packages
 import pickle
 import numpy as np
@@ -33,9 +6,16 @@ import cv2
 from sklearn.utils import shuffle
 
 # Load pickled data
-training_file = "/home/adarsh/software/udacity/train.p"
-validation_file="/home/adarsh/software/udacity/valid.p"
-testing_file = "/home/adarsh/software/udacity/test.p"
+
+# #Desktop
+# training_file = "/home/adarsh/software/udacity/train.p"
+# validation_file="/home/adarsh/software/udacity/valid.p"
+# testing_file = "/home/adarsh/software/udacity/test.p"
+
+#Mac
+training_file = "/Users/akulkarni/Documents/udacity/traffic-signs-data/train.p"
+validation_file="/Users/akulkarni/Documents/udacity/traffic-signs-data/valid.p"
+testing_file = "/Users/akulkarni/Documents/udacity/traffic-signs-data/test.p"
 
 with open(training_file, mode='rb') as f:
     train = pickle.load(f)
@@ -44,31 +24,19 @@ with open(validation_file, mode='rb') as f:
 with open(testing_file, mode='rb') as f:
     test = pickle.load(f)
     
+print("Loaded pkls")
+
 X_train, y_train = train['features'], train['labels']
 X_valid, y_valid = valid['features'], valid['labels']
 X_test, y_test = test['features'], test['labels']
 
+print(X_train.shape, y_train.shape, X_valid.shape, y_valid.shape, X_test.shape, y_test.shape)
 
-# ---
-# 
-# ## Step 1: Dataset Summary & Exploration
-# 
-# The pickled data is a dictionary with 4 key/value pairs:
-# 
-# - `'features'` is a 4D array containing raw pixel data of the traffic sign images, (num examples, width, height, channels).
-# - `'labels'` is a 1D array containing the label/class id of the traffic sign. The file `signnames.csv` contains id -> name mappings for each id.
-# - `'sizes'` is a list containing tuples, (width, height) representing the original width and height the image.
-# - `'coords'` is a list containing tuples, (x1, y1, x2, y2) representing coordinates of a bounding box around the sign in the image. **THESE COORDINATES ASSUME THE ORIGINAL IMAGE. THE PICKLED DATA CONTAINS RESIZED VERSIONS (32 by 32) OF THESE IMAGES**
-# 
-# Complete the basic data summary below. Use python, numpy and/or pandas methods to calculate the data summary rather than hard coding the results. For example, the [pandas shape method](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.shape.html) might be useful for calculating some of the summary results. 
+X = np.concatenate((X_train, X_valid, X_test))
+y = np.concatenate((y_train, y_valid, y_test))
 
-# ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
+print(X.shape, y.shape)
 
-# In[2]:
-
-
-### Replace each question mark with the appropriate value. 
-### Use python, pandas or numpy methods rather than hard coding the results
 n_train = len(X_train)
 n_validation = len(X_valid)
 n_test = len(X_test)
@@ -80,56 +48,7 @@ print("Number of validation examples =", n_validation)
 print("Number of testing examples =", n_test)
 print("Image data shape =", image_shape)
 print("Number of classes =", n_classes)
-
-
-# ### Include an exploratory visualization of the dataset
-
-# Visualize the German Traffic Signs Dataset using the pickled file(s). This is open ended, suggestions include: plotting traffic sign images, plotting the count of each sign, etc. 
-# 
-# The [Matplotlib](http://matplotlib.org/) [examples](http://matplotlib.org/examples/index.html) and [gallery](http://matplotlib.org/gallery.html) pages are a great resource for doing visualizations in Python.
-# 
-# **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections. It can be interesting to look at the distribution of classes in the training, validation and test set. Is the distribution the same? Are there more examples of some classes than others?
-
-# In[3]:
-
-
-### Data exploration visualization code goes here.
-### Feel free to use as many code cells as needed.
-# import matplotlib.pyplot as plt
-# Visualizations will be shown in the notebook.
-# get_ipython().run_line_magic('matplotlib', 'inline')
-
-
-# ----
-# 
-# ## Step 2: Design and Test a Model Architecture
-# 
-# Design and implement a deep learning model that learns to recognize traffic signs. Train and test your model on the [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset).
-# 
-# The LeNet-5 implementation shown in the [classroom](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/6df7ae49-c61c-4bb2-a23e-6527e69209ec/lessons/601ae704-1035-4287-8b11-e2c2716217ad/concepts/d4aca031-508f-4e0b-b493-e7b706120f81) at the end of the CNN lesson is a solid starting point. You'll have to change the number of classes and possibly the preprocessing, but aside from that it's plug and play! 
-# 
-# With the LeNet-5 solution from the lecture, you should expect a validation set accuracy of about 0.89. To meet specifications, the validation set accuracy will need to be at least 0.93. It is possible to get an even higher accuracy, but 0.93 is the minimum for a successful project submission. 
-# 
-# There are various aspects to consider when thinking about this problem:
-# 
-# - Neural network architecture (is the network over or underfitting?)
-# - Play around preprocessing techniques (normalization, rgb to grayscale, etc)
-# - Number of examples per label (some have more than others).
-# - Generate fake data.
-# 
-# Here is an example of a [published baseline model on this problem](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf). It's not required to be familiar with the approach used in the paper but, it's good practice to try to read papers like these.
-
-# ### Pre-process the Data Set (normalization, grayscale, etc.)
-
-# Minimally, the image data should be normalized so that the data has mean zero and equal variance. For image data, `(pixel - 128)/ 128` is a quick way to approximately normalize the data and can be used in this project. 
-# 
-# Other pre-processing steps are optional. You can try different techniques to see if it improves performance. 
-# 
-# Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
-
-# In[4]:
-
-
+'''
 def grayscale_images(img_arr):
     grey_imgs = []
     for img in img_arr:
@@ -160,11 +79,6 @@ X_test_grey = grayscale_images(X_test)
 X_test_preprocessed = normalize_images(X_test_grey)
 
 X_train_preprocessed, y_train = shuffle(X_train_preprocessed, y_train)
-
-
-# ### Model Architecture
-
-# In[5]:
 
 
 import tensorflow as tf
@@ -210,15 +124,6 @@ def Network(x):
     
     return logits
 
-
-# ### Train, Validate and Test the Model
-
-# A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
-# sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
-
-# In[6]:
-
-
 x = tf.placeholder(tf.float32, (None, 32, 32, 1))
 y = tf.placeholder(tf.int32, (None))
 one_hot_y = tf.one_hot(y, n_classes)
@@ -246,17 +151,6 @@ def evaluate(X_data, y_data):
         total_accuracy += (accuracy * len(batch_x))
     return total_accuracy / num_examples
 
-
-### Train your model here.
-### Calculate and report the accuracy on the training and validation set.
-### Once a final model architecture is selected, 
-### the accuracy on the test set should be calculated and reported as well.
-### Feel free to use as many code cells as needed.
-
-
-# In[10]:
-
-
 BATCH_SIZE = 1024
 EPOCHS = 1000
 
@@ -283,7 +177,7 @@ with tf.Session() as sess:
         if i % 100 == 0:
             test_accuracy = evaluate(X_test_preprocessed, y_test)
             print("Test Accuracy = {:.3f}".format(test_accuracy))
-
+'''
 
 # ---
 # 
@@ -406,24 +300,24 @@ with tf.Session() as sess:
 # activation_min/max: can be used to view the activation contrast in more detail, by default matplot sets min and max to the actual min and max values of the output
 # plt_num: used to plot out multiple different weight feature map sets on the same block, just extend the plt number for each new feature map entry
 
-def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_max=-1 ,plt_num=1):
-    # Here make sure to preprocess your image_input in a way your network expects
-    # with size, normalization, ect if needed
-    # image_input =
-    # Note: x should be the same name as your network's tensorflow data placeholder variable
-    # If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function
-    activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
-    featuremaps = activation.shape[3]
-    plt.figure(plt_num, figsize=(15,15))
-    for featuremap in range(featuremaps):
-        plt.subplot(6,8, featuremap+1) # sets the number of feature maps to show on each row and column
-        plt.title('FeatureMap ' + str(featuremap)) # displays the feature map number
-        if activation_min != -1 & activation_max != -1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin =activation_min, vmax=activation_max, cmap="gray")
-        elif activation_max != -1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmax=activation_max, cmap="gray")
-        elif activation_min !=-1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
-        else:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
+# def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_max=-1 ,plt_num=1):
+#     # Here make sure to preprocess your image_input in a way your network expects
+#     # with size, normalization, ect if needed
+#     # image_input =
+#     # Note: x should be the same name as your network's tensorflow data placeholder variable
+#     # If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function
+#     activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
+#     featuremaps = activation.shape[3]
+#     plt.figure(plt_num, figsize=(15,15))
+#     for featuremap in range(featuremaps):
+#         plt.subplot(6,8, featuremap+1) # sets the number of feature maps to show on each row and column
+#         plt.title('FeatureMap ' + str(featuremap)) # displays the feature map number
+#         if activation_min != -1 & activation_max != -1:
+#             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin =activation_min, vmax=activation_max, cmap="gray")
+#         elif activation_max != -1:
+#             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmax=activation_max, cmap="gray")
+#         elif activation_min !=-1:
+#             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
+#         else:
+#             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
 
