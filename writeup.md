@@ -19,11 +19,11 @@ The goals / steps of this project are the following:
 [image1]: ./images/histogram_labels.png "Visualization"
 [image2]: ./images/histogram_labels_augmentation.png "Visualization after Augmentation"
 [image3]: ./images/sample_gray.png "Sample Gray Image"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[image4]: ./images/ahead_only_resized.jpg "Traffic Sign 1"
+[image5]: ./images/beware_ice_snow_resized.jpg "Traffic Sign 2"
+[image6]: ./images/double_curve_resized.jpg "Traffic Sign 3"
+[image7]: ./images/mandatory_roundabout_resized.jpg "Traffic Sign 4"
+[image8]: ./images/priority_road_resized.jpg "Traffic Sign 5"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -33,7 +33,7 @@ The goals / steps of this project are the following:
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+You're reading it! and here is a link to my [project code](https://github.com/AdarshK1/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 ### Data Set Summary & Exploration
 
@@ -82,20 +82,23 @@ My final model consisted of the following layers:
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:|
 | Input         		| 32x32x3 RGB image   							|
-| Convolution 3x3     	| (1,1) stride, Same Padding, Output  32x32x8   |
+| Convolution 5x5     	| Stride: (1,1), Padding: Same, Output 32x32x16 |
 | Relu					| Activation Function							|
-| Bath Normalization    | Normalize across the batch                    |
-| Max pooling 2x2	    | (2,2) stride, Same Padding, Output 16x16x8    |
-| Convolution 3x3     	| (1,1) stride, Same Padding, Output 16x16x16   |
+| Bath Normalization    | Normalize Across Batch                        |
+| Max pooling 2x2	    | Stride: (2,2), Padding: Same, Output 16x16x16 |
+| Convolution 3x3     	| Stride: (1,1), Padding: Same, Output 16x16x32 |
 | Relu					| Activation Function							|
-| Bath Normalization    | Normalize across the batch                    |
-| Max pooling	      	| (2,2) stride, Same Padding, Output 8x8x16     |
-| Flatten        		| flatten, Output 1x1,024        				|
-| Fully connected		| Output 256        							|
+| Bath Normalization    | Normalize Across Batch                        |
+| Max pooling	      	| Stride: (2,2), Padding: Same, Output 8x8x32   |
+| Flatten        		| Flatten, Output: 1x2048        				|
+| Dropout               | Regularization, rate: 0.5                     |
+| Fully connected		| Output: 512        							| 
 | Relu  				| Activation Function         					|
-| Fully connected		| Output 128        							|
+| Dropout               | Regularization, rate: 0.5                     |
+| Fully connected		| Output: 128        							|
 | Relu  				| Activation Function         					|
-| Fully connected		| Output n_classes (43)        				    |
+| Dropout               | Regularization, rate: 0.5                     |
+| Fully connected		| Output: n_classes (43)        				|
 | Relu  				| Activation Function         					|
  
 
@@ -110,9 +113,9 @@ I have a personal workstation equipped with an Nvidia Titan Xp that I used to tr
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of 0.981
+* validation set accuracy of 0.976
+* test set accuracy of 0.904
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
@@ -131,12 +134,17 @@ If a well known architecture was chosen:
 
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are the five German traffic signs that I found on the web:
+
+Note that before these images were inferenced on, the appropriate resizing and preprocessing steps were done.
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
 
-The first image might be difficult to classify because ...
+Some notes on why I chose these particular images:
+- Image 1: I chose this image because it is at an angle and has that watermark. I was curious to see if the watermark would through the network off
+- Image 2: I was curious to see if the buil-up of actual ice and snow (which one can imagine is a very real problem) would through off the network. As it happens, it did.
+- Image 3: 
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -144,31 +152,65 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Priority Road      	| Priority Road                                 | 
+| Ahead Only   			| Ahead Only                                    |
+| Beware Ice/Snow		| Roadwork										|
+| Double Curve	      	| End of No Passing					 			|
+| Mandatory Roundabout	| Mandatory Roundabout                          |
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This is a lot lower than the ~90% on the test set seen above. However, I choose this pictures specifically as edge cases, so 3/5 correct is within the scope of reason.
 
-#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability.
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+The code for making predictions on my final model is located in the 15-19th cells of the Ipython notebook.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+For the first image, the model is very sure that the sign is a priority road, which is correct.
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 99.9%         		| Priority Road   								| 
+| 0.07%     			| Roundabout Mandatory 							|
+| 0.01%	 				| End of all speed and passing limits			|
+| 0.007%	      		| Keep right					 				|
+| 0.0005%				| End of no passing by vehicles over 3.5 metric tons|
 
+For the second image, the model is very confident that the sign is ahead only, which is also correct
 
-For the second image ... 
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| 99.9%         		| Ahead Only   									| 
+| 0.002%     			| Keep right 									|
+| 0.0008%				| Yield											|
+| 0.0006%	      		| Turn left ahead					 			|
+| 0.00002%				| Go straight or left      						|
 
+For the third image, the model is again rather sure that the sign is Road work, but this turns out to be wrong. The only reasonable explanation to this is that the occlusion of features by the snow itself led to the mis-classification. That being said, the model is slightly more unsure than it has been in the previous cases, but again not by much.
 
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| 99.7%         		| Road Work   									| 
+| 0.2%     				| Bumpy Road 									|
+| 0.04%					| Priority Road									|
+| 0.03%	      			| Go straight or left			 				|
+| 0.01%				    | Roundabout mandatory     						|
 
+For the fourth image, the model is in fact much less sure of its answer, which ended up being incorrect.
+
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| 79.1%         		| End of no passing   							| 
+| 11.0%     			| Slippery road 								|
+| 9.63%					| Children Crossing								|
+| 0.11%	      			| Dangerous Curve				 				|
+| 0.005%				| Vehicles over 3.5 metric tons prohibited      |
+
+For the fifth and final image, the model is pretty sure, although not as much as the first two, of it's correct answer.
+
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| .60         			| Roundabout Mandatory   						| 
+| .20     				| End of all speed and passing limits 			|
+| .05					| Speed limit (20km/h)							|
+| .04	      			| Speed limit (30km/h)					 		|
+| .01				    | Speed limit (50km/h)      					|
