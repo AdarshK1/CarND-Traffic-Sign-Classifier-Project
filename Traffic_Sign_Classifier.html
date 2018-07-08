@@ -12027,8 +12027,36 @@ Number of classes = 43
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">apply_transform</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">rando</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">channels</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="k">if</span> <span class="n">rando</span> <span class="o">&lt;</span> <span class="mf">0.33</span><span class="p">:</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getRotationMatrix2D</span><span class="p">(((</span><span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,(</span><span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span><span class="p">),</span><span class="mi">15</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">M</span><span class="p">,(</span><span class="n">cols</span><span class="p">,</span><span class="n">rows</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">rando</span> <span class="o">&lt;</span> <span class="mf">0.66</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rando</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpAffine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">M</span><span class="p">,(</span><span class="n">cols</span><span class="p">,</span><span class="n">rows</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">X_test</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">n_classes</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
@@ -12037,13 +12065,20 @@ Number of classes = 43
 <span class="n">more_X</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">more_y</span> <span class="o">=</span> <span class="p">[]</span>
 
+<span class="n">argwheres</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span><span class="p">):</span>
+    <span class="n">arg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">y</span><span class="o">==</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">argwheres</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">):</span>
-        <span class="n">num_added</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">-</span> <span class="n">counts</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">2000</span><span class="p">):</span>
+        <span class="n">num_added</span> <span class="o">=</span> <span class="mi">2000</span> <span class="o">-</span> <span class="n">counts</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_added</span><span class="p">):</span>
-            <span class="n">more_X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">more_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">counts</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="n">random_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">argwheres</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+            <span class="n">more_X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apply_transform</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">random_index</span><span class="p">]))</span>
+            <span class="n">more_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">random_index</span><span class="p">])</span>
+            <span class="n">counts</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">random_index</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
 
 <span class="n">X_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">more_X</span><span class="p">))</span>
 <span class="n">y_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">more_y</span><span class="p">))</span>
@@ -12063,7 +12098,7 @@ Number of classes = 43
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(39209, 32, 32, 3) (39209,)
+<pre>(51839, 32, 32, 3) (51839,)
 </pre>
 </div>
 </div>
@@ -12076,7 +12111,7 @@ Number of classes = 43
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -12089,7 +12124,7 @@ Number of classes = 43
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">y_new</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">n_classes</span><span class="p">)</span>
@@ -12110,7 +12145,7 @@ Number of classes = 43
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(54710, 32, 32, 3) (54710,)
+<pre>(92170, 32, 32, 3) (92170,)
 </pre>
 </div>
 </div>
@@ -12123,7 +12158,7 @@ Number of classes = 43
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -12175,7 +12210,7 @@ Number of classes = 43
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">grayscale_images</span><span class="p">(</span><span class="n">img_arr</span><span class="p">):</span>
@@ -12226,8 +12261,9 @@ Number of classes = 43
 <span class="n">X_test_grey</span> <span class="o">=</span> <span class="n">grayscale_images</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="n">X_test_preprocessed</span> <span class="o">=</span> <span class="n">normalize_images</span><span class="p">(</span><span class="n">X_test_grey</span><span class="p">)</span>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_new_preprocessed</span><span class="p">,</span> <span class="n">y_new</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_valid</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_valid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_new_preprocessed</span><span class="p">,</span> <span class="n">y_new</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_valid</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_valid</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12244,7 +12280,7 @@ Number of classes = 43
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(49239, 32, 32, 1) (5471, 32, 32, 1) (49239,) (5471,)
+<pre>(70509, 32, 32, 1) (7835, 32, 32, 1) (13826, 32, 32, 1) (70509,) (7835,) (13826,)
 </pre>
 </div>
 </div>
@@ -12263,7 +12299,7 @@ Number of classes = 43
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
@@ -12333,7 +12369,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create Placeholders</span>
@@ -12379,10 +12415,10 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">1024</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">256</span>
 <span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">500</span>
 
 <span class="c1"># Ensure that the computer keeps working while training!</span>
@@ -12410,8 +12446,8 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
         
         <span class="c1"># Every 10 epochs, save the model and compute Test Acuracy</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>    
-            <span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">X_test_preprocessed</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-            <span class="n">saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;./trained_model_6_</span><span class="si">%s</span><span class="s1">.ckpt&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">))</span>
+            <span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+            <span class="n">saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;./trained_model_7_</span><span class="si">%s</span><span class="s1">.ckpt&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">))</span>
             
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Accuracy = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model saved</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -12434,2154 +12470,2154 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <pre>Training...
 
 EPOCH 1 ...
-Train Accuracy = 0.469
-Validation Accuracy = 0.477
+Train Accuracy = 0.647
+Validation Accuracy = 0.636
 
-Test Accuracy = 0.305
+Test Accuracy = 0.636
 Model saved
 
 EPOCH 2 ...
-Train Accuracy = 0.665
-Validation Accuracy = 0.661
+Train Accuracy = 0.846
+Validation Accuracy = 0.827
 
 EPOCH 3 ...
-Train Accuracy = 0.781
-Validation Accuracy = 0.769
+Train Accuracy = 0.908
+Validation Accuracy = 0.888
 
 EPOCH 4 ...
-Train Accuracy = 0.849
-Validation Accuracy = 0.837
+Train Accuracy = 0.931
+Validation Accuracy = 0.909
 
 EPOCH 5 ...
-Train Accuracy = 0.922
-Validation Accuracy = 0.906
+Train Accuracy = 0.946
+Validation Accuracy = 0.922
 
 EPOCH 6 ...
-Train Accuracy = 0.947
-Validation Accuracy = 0.928
+Train Accuracy = 0.956
+Validation Accuracy = 0.934
 
 EPOCH 7 ...
-Train Accuracy = 0.958
+Train Accuracy = 0.960
 Validation Accuracy = 0.939
 
 EPOCH 8 ...
-Train Accuracy = 0.965
-Validation Accuracy = 0.946
+Train Accuracy = 0.964
+Validation Accuracy = 0.944
 
 EPOCH 9 ...
-Train Accuracy = 0.968
-Validation Accuracy = 0.952
+Train Accuracy = 0.965
+Validation Accuracy = 0.943
 
 EPOCH 10 ...
-Train Accuracy = 0.972
-Validation Accuracy = 0.956
+Train Accuracy = 0.967
+Validation Accuracy = 0.946
 
 EPOCH 11 ...
-Train Accuracy = 0.975
-Validation Accuracy = 0.961
+Train Accuracy = 0.969
+Validation Accuracy = 0.949
 
-Test Accuracy = 0.849
+Test Accuracy = 0.942
 Model saved
 
 EPOCH 12 ...
-Train Accuracy = 0.976
-Validation Accuracy = 0.962
+Train Accuracy = 0.971
+Validation Accuracy = 0.950
 
 EPOCH 13 ...
-Train Accuracy = 0.977
-Validation Accuracy = 0.965
+Train Accuracy = 0.972
+Validation Accuracy = 0.951
 
 EPOCH 14 ...
-Train Accuracy = 0.978
-Validation Accuracy = 0.966
+Train Accuracy = 0.973
+Validation Accuracy = 0.953
 
 EPOCH 15 ...
-Train Accuracy = 0.978
-Validation Accuracy = 0.964
+Train Accuracy = 0.973
+Validation Accuracy = 0.953
 
 EPOCH 16 ...
-Train Accuracy = 0.979
-Validation Accuracy = 0.967
+Train Accuracy = 0.973
+Validation Accuracy = 0.952
 
 EPOCH 17 ...
-Train Accuracy = 0.979
-Validation Accuracy = 0.968
+Train Accuracy = 0.973
+Validation Accuracy = 0.953
 
 EPOCH 18 ...
-Train Accuracy = 0.980
-Validation Accuracy = 0.969
+Train Accuracy = 0.973
+Validation Accuracy = 0.952
 
 EPOCH 19 ...
-Train Accuracy = 0.980
-Validation Accuracy = 0.968
+Train Accuracy = 0.974
+Validation Accuracy = 0.953
 
 EPOCH 20 ...
-Train Accuracy = 0.980
-Validation Accuracy = 0.969
+Train Accuracy = 0.974
+Validation Accuracy = 0.952
 
 EPOCH 21 ...
-Train Accuracy = 0.980
-Validation Accuracy = 0.970
+Train Accuracy = 0.975
+Validation Accuracy = 0.953
 
-Test Accuracy = 0.868
+Test Accuracy = 0.951
 Model saved
 
 EPOCH 22 ...
-Train Accuracy = 0.980
-Validation Accuracy = 0.970
+Train Accuracy = 0.974
+Validation Accuracy = 0.955
 
 EPOCH 23 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.969
+Train Accuracy = 0.975
+Validation Accuracy = 0.955
 
 EPOCH 24 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.970
+Train Accuracy = 0.975
+Validation Accuracy = 0.956
 
 EPOCH 25 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.970
+Train Accuracy = 0.975
+Validation Accuracy = 0.956
 
 EPOCH 26 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.975
+Validation Accuracy = 0.956
 
 EPOCH 27 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.971
+Validation Accuracy = 0.949
 
 EPOCH 28 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.975
+Validation Accuracy = 0.957
 
 EPOCH 29 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 30 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 31 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.972
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
-Test Accuracy = 0.876
+Test Accuracy = 0.955
 Model saved
 
 EPOCH 32 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 33 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.972
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 34 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 35 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.972
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 36 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 37 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.972
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 38 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.959
+Validation Accuracy = 0.935
 
 EPOCH 39 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.975
+Validation Accuracy = 0.957
 
 EPOCH 40 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 41 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
-Test Accuracy = 0.882
+Test Accuracy = 0.955
 Model saved
 
 EPOCH 42 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 43 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 44 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 45 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 46 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 47 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 48 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 49 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 50 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 51 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
-Test Accuracy = 0.883
+Test Accuracy = 0.957
 Model saved
 
 EPOCH 52 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 53 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 54 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.973
+Validation Accuracy = 0.951
 
 EPOCH 55 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 56 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 57 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 58 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 59 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 60 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 61 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.886
+Test Accuracy = 0.957
 Model saved
 
 EPOCH 62 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 63 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 64 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 65 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 66 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.962
 
 EPOCH 67 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 68 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 69 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.967
+Validation Accuracy = 0.942
 
 EPOCH 70 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.957
 
 EPOCH 71 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
-Test Accuracy = 0.887
+Test Accuracy = 0.956
 Model saved
 
 EPOCH 72 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 73 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 74 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 75 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 76 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 77 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 78 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 79 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 80 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 81 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
-Test Accuracy = 0.888
+Test Accuracy = 0.957
 Model saved
 
 EPOCH 82 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 83 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 84 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 85 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 86 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 87 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 88 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 89 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 90 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.967
+Validation Accuracy = 0.943
 
 EPOCH 91 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
-Test Accuracy = 0.891
+Test Accuracy = 0.957
 Model saved
 
 EPOCH 92 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 93 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 94 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 95 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 96 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 97 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 98 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 99 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 100 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 101 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.891
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 102 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 103 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 104 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 105 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 106 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 107 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 108 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 109 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 110 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 111 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.971
+Validation Accuracy = 0.950
 
-Test Accuracy = 0.894
+Test Accuracy = 0.947
 Model saved
 
 EPOCH 112 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.957
 
 EPOCH 113 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 114 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 115 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 116 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 117 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 118 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 119 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 120 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 121 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.893
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 122 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 123 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 124 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 125 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 126 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 127 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 128 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 129 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 130 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.964
+Validation Accuracy = 0.936
 
 EPOCH 131 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.957
 
-Test Accuracy = 0.894
+Test Accuracy = 0.955
 Model saved
 
 EPOCH 132 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 133 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 134 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 135 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 136 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 137 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 138 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 139 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 140 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 141 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.895
+Test Accuracy = 0.958
 Model saved
 
 EPOCH 142 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 143 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 144 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 145 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 146 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 147 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 148 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 149 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 150 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 151 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.895
+Test Accuracy = 0.958
 Model saved
 
 EPOCH 152 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 153 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.969
+Validation Accuracy = 0.945
 
 EPOCH 154 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 155 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 156 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 157 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 158 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 159 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 160 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 161 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.896
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 162 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 163 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 164 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 165 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 166 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 167 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 168 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 169 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 170 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 171 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.955
 
-Test Accuracy = 0.898
+Test Accuracy = 0.953
 Model saved
 
 EPOCH 172 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 173 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 174 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 175 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 176 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 177 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 178 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 179 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 180 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 181 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.899
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 182 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 183 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 184 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 185 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 186 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 187 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 188 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 189 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 190 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 191 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.900
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 192 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 193 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 194 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 195 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.973
+Validation Accuracy = 0.953
 
 EPOCH 196 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.957
 
 EPOCH 197 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 198 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 199 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 200 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 201 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.900
+Test Accuracy = 0.957
 Model saved
 
 EPOCH 202 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 203 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 204 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 205 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 206 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 207 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 208 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 209 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 210 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 211 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.900
+Test Accuracy = 0.958
 Model saved
 
 EPOCH 212 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 213 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 214 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 215 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 216 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 217 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 218 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 219 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 220 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 221 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.895
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 222 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 223 ...
-Train Accuracy = 0.979
-Validation Accuracy = 0.967
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 224 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.971
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 225 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 226 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 227 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 228 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 229 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 230 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 231 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.899
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 232 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 233 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 234 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 235 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 236 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.973
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 237 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 238 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 239 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 240 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 241 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
-Test Accuracy = 0.899
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 242 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 243 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 244 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 245 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.973
+Validation Accuracy = 0.954
 
 EPOCH 246 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 247 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 248 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 249 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 250 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 251 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.899
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 252 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 253 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 254 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 255 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 256 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 257 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 258 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 259 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 260 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 261 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.901
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 262 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 263 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 264 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 265 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 266 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 267 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 268 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 269 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 270 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 271 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
-Test Accuracy = 0.900
+Test Accuracy = 0.958
 Model saved
 
 EPOCH 272 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.960
 
 EPOCH 273 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 274 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 275 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 276 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 277 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 278 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 279 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 280 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 281 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.901
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 282 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 283 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 284 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 285 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 286 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 287 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 288 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 289 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 290 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 291 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
-Test Accuracy = 0.901
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 292 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 293 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 294 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 295 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 296 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 297 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 298 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 299 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.972
+Validation Accuracy = 0.953
 
 EPOCH 300 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 301 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.901
+Test Accuracy = 0.958
 Model saved
 
 EPOCH 302 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 303 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 304 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 305 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 306 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 307 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 308 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 309 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 310 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 311 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.902
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 312 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 313 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 314 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 315 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 316 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 317 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 318 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 319 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 320 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 321 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.902
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 322 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 323 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 324 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 325 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 326 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.970
+Validation Accuracy = 0.951
 
 EPOCH 327 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.958
 
 EPOCH 328 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 329 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 330 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 331 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.902
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 332 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 333 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 334 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 335 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 336 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 337 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 338 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 339 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 340 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 341 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
-Test Accuracy = 0.903
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 342 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 343 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 344 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 345 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 346 ...
-Train Accuracy = 0.977
-Validation Accuracy = 0.965
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 347 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.972
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 348 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.974
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 349 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 350 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 351 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.898
+Test Accuracy = 0.961
 Model saved
 
 EPOCH 352 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 353 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.975
+Validation Accuracy = 0.957
 
 EPOCH 354 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 355 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 356 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 357 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 358 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 359 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 360 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 361 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.899
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 362 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 363 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 364 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 365 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 366 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 367 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 368 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 369 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 370 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 371 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
-Test Accuracy = 0.899
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 372 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 373 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 374 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 375 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 376 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 377 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 378 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 379 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 380 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 381 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.899
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 382 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 383 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.974
+Validation Accuracy = 0.957
 
 EPOCH 384 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 385 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.960
 
 EPOCH 386 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 387 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 388 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 389 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
 EPOCH 390 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 391 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.900
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 392 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 393 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 394 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 395 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 396 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 397 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 398 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 399 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 400 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 401 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.900
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 402 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 403 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 404 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 405 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 406 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 407 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 408 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 409 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 410 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 411 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.901
+Test Accuracy = 0.957
 Model saved
 
 EPOCH 412 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 413 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 414 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 415 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 416 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.965
 
 EPOCH 417 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.965
 
 EPOCH 418 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 419 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 420 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 421 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
-Test Accuracy = 0.901
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 422 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 423 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 424 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 425 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 426 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 427 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 428 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.965
 
 EPOCH 429 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.965
 
 EPOCH 430 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 431 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.961
 
-Test Accuracy = 0.901
+Test Accuracy = 0.958
 Model saved
 
 EPOCH 432 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 433 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 434 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 435 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 436 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 437 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.975
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 438 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 439 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 440 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.959
 
 EPOCH 441 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.902
+Test Accuracy = 0.957
 Model saved
 
 EPOCH 442 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 443 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 444 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 445 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 446 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 447 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 448 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 449 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 450 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 451 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.902
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 452 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 453 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 454 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 455 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 456 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 457 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 458 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 459 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 460 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 461 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
-Test Accuracy = 0.903
+Test Accuracy = 0.960
 Model saved
 
 EPOCH 462 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 463 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 464 ...
-Train Accuracy = 0.979
-Validation Accuracy = 0.971
+Train Accuracy = 0.975
+Validation Accuracy = 0.962
 
 EPOCH 465 ...
-Train Accuracy = 0.980
-Validation Accuracy = 0.973
+Train Accuracy = 0.975
+Validation Accuracy = 0.961
 
 EPOCH 466 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.975
+Validation Accuracy = 0.962
 
 EPOCH 467 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 468 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 469 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 470 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
 EPOCH 471 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.904
+Test Accuracy = 0.961
 Model saved
 
 EPOCH 472 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 473 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 474 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 475 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 476 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 477 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 478 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 479 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 480 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.977
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 481 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
-Test Accuracy = 0.904
+Test Accuracy = 0.961
 Model saved
 
 EPOCH 482 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 483 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.977
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 484 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.977
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 485 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.977
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 486 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.977
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 487 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.977
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 488 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 489 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 490 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.972
+Validation Accuracy = 0.954
 
 EPOCH 491 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.962
 
-Test Accuracy = 0.904
+Test Accuracy = 0.959
 Model saved
 
 EPOCH 492 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.963
 
 EPOCH 493 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 494 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 495 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 496 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.965
 
 EPOCH 497 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 498 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 EPOCH 499 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.965
 
 EPOCH 500 ...
-Train Accuracy = 0.981
-Validation Accuracy = 0.976
+Train Accuracy = 0.976
+Validation Accuracy = 0.964
 
 </pre>
 </div>
@@ -14612,12 +14648,12 @@ Validation Accuracy = 0.976
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in Priority Road Image and show it</span>
 <span class="n">priority_road</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;./images/priority_road.jpg&quot;</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&quot;priority_road_resized_.jpg&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">priority_road</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">)))</span>
+<span class="c1"># cv2.imwrite(&quot;priority_road_resized.jpg&quot;, cv2.resize(priority_road, (32,32)))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">priority_road</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
 </pre></div>
 
@@ -14631,13 +14667,13 @@ Validation Accuracy = 0.976
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[10]:</div>
+<div class="prompt output_prompt">Out[22]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.image.AxesImage at 0x7f020050c0b8&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7f8ce92c3828&gt;</pre>
 </div>
 
 </div>
@@ -14663,12 +14699,12 @@ Validation Accuracy = 0.976
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in Mandatory Roundabout Image and show it</span>
 <span class="n">mandatory_roundabout</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;./images/mandatory_roundabout.jpg&quot;</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&quot;mandatory_roundabout_resized_.jpg&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">mandatory_roundabout</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">)))</span>
+<span class="c1"># cv2.imwrite(&quot;mandatory_roundabout_resized.jpg&quot;, cv2.resize(mandatory_roundabout, (32,32)))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">mandatory_roundabout</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
 </pre></div>
 
@@ -14682,13 +14718,13 @@ Validation Accuracy = 0.976
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[11]:</div>
+<div class="prompt output_prompt">Out[23]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.image.AxesImage at 0x7f02005125c0&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7f8ce914fef0&gt;</pre>
 </div>
 
 </div>
@@ -14714,12 +14750,12 @@ Validation Accuracy = 0.976
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in Double Curve Image and show it</span>
 <span class="n">double_curve</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;./images/double_curve.jpg&quot;</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&quot;double_curve_resized_.jpg&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">double_curve</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">)))</span>
+<span class="c1"># cv2.imwrite(&quot;double_curve_resized.jpg&quot;, cv2.resize(double_curve, (32,32)))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">double_curve</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
 </pre></div>
 
@@ -14733,13 +14769,13 @@ Validation Accuracy = 0.976
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[12]:</div>
+<div class="prompt output_prompt">Out[24]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.image.AxesImage at 0x7f02004cc668&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7f8ce9104f28&gt;</pre>
 </div>
 
 </div>
@@ -14765,12 +14801,12 @@ Validation Accuracy = 0.976
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in Beware of Ice/Snow Image and show it</span>
 <span class="n">beware_ice_snow</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;./images/beware_ice_snow.jpg&quot;</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&quot;beware_ice_snow_resized_.jpg&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">beware_ice_snow</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">)))</span>
+<span class="c1"># cv2.imwrite(&quot;beware_ice_snow_resized.jpg&quot;, cv2.resize(beware_ice_snow, (32,32)))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">beware_ice_snow</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
 </pre></div>
 
@@ -14784,13 +14820,13 @@ Validation Accuracy = 0.976
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[13]:</div>
+<div class="prompt output_prompt">Out[25]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.image.AxesImage at 0x7f0200584710&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7f8ce90bdf98&gt;</pre>
 </div>
 
 </div>
@@ -14816,12 +14852,12 @@ Validation Accuracy = 0.976
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in Ahead Only Image and show it</span>
 <span class="n">ahead_only</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;./images/ahead_only.jpg&quot;</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&quot;ahead_only_resized_.jpg&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">ahead_only</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">)))</span>
+<span class="c1"># cv2.imwrite(&quot;ahead_only_resized.jpg&quot;, cv2.resize(ahead_only, (32,32)))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">ahead_only</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
 </pre></div>
 
@@ -14835,13 +14871,13 @@ Validation Accuracy = 0.976
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[14]:</div>
+<div class="prompt output_prompt">Out[26]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.image.AxesImage at 0x7f020046e1d0&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7f8ce90faa20&gt;</pre>
 </div>
 
 </div>
@@ -14875,7 +14911,7 @@ Validation Accuracy = 0.976
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">preprocess_extra_images</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
@@ -14906,7 +14942,7 @@ Validation Accuracy = 0.976
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create an easy to use array of the sign names</span>
@@ -14999,7 +15035,7 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Start with a Clean Slate</span>
@@ -15016,7 +15052,7 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
 <span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>
 
 <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
-    <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="s2">&quot;./trained_model_6_490.ckpt&quot;</span><span class="p">)</span>
+    <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="s2">&quot;./models/trained_model_6_490.ckpt&quot;</span><span class="p">)</span>
     <span class="n">l_gits</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">feed_dict_x</span><span class="p">,</span> <span class="n">y</span><span class="p">:[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">40</span><span class="p">]})</span>
     <span class="n">softmax</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">l_gits</span><span class="p">)</span>
     <span class="n">argmax</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">softmax</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -15048,7 +15084,7 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>INFO:tensorflow:Restoring parameters from ./trained_model_6_490.ckpt
+<pre>INFO:tensorflow:Restoring parameters from ./models/trained_model_6_490.ckpt
 Accuracy of the model on new images is 60%
 Top 1 Label is Priority road with 99.913412% Confidence
 Top 2 Label is Roundabout mandatory with 0.067410% Confidence
@@ -15135,7 +15171,7 @@ Top 5 Label is Speed limit (50km/h) with 0.078128% Confidence
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Visualize your network&#39;s feature maps here.</span>

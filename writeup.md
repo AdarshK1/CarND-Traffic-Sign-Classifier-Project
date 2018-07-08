@@ -44,9 +44,10 @@ signs data set:
 
 * The size of original training set is 34799
 * The size of original validation set is 4410
-* The size of augmented training set is 49239
-* The size of augmented validation set is 5471
-* The size of test set is 12630
+* The size of original test set is 12630
+* The size of augmented training set is 70509
+* The size of augmented validation set is 7835
+* The size of augmented test set is 13826
 * The shape of a traffic sign image is (32, 32, 3)
 * The number of unique classes/labels in the data set is 43 
 
@@ -72,7 +73,7 @@ An example of a grayscaled image. It wouldn't make much sense to display a norma
 
 ![alt text][image3]
 
-To add more data to the the data set, I used a very simple technique. I decided that it was most important to increase the frequency of under-represented labels in the training set. Even though the frequencies weren't modified in the test set, performance on those lower frequency labels still increased. Fundamentally, the network needs to have a critical mass of data to learn from for each label.
+To add more data to the the data set, I used a very simple technique. I decided that it was most important to increase the frequency of under-represented labels in the training set. Fundamentally, the network needs to have a critical mass of data to learn from for each label. Additionally, the data went through a small transformation (randomly chosen as a rotation, shift or flip) before being added back into the training set.
 
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
@@ -104,18 +105,18 @@ My final model consisted of the following layers:
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-I have a personal workstation equipped with an Nvidia Titan Xp that I used to train the model. I used the following hyperparamteres:
+I have a personal workstation equipped with an Nvidia Titan Xp that I used to train the model. I used the following hyperparamters:
 - Optimizer: Adam
 - Learning Rate: 0.001
-- Batch Size: 1024
-- Epochs: 100
+- Batch Size: 256
+- Epochs: 500
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of 0.981
-* validation set accuracy of 0.976
-* test set accuracy of 0.904
+* training set accuracy of 0.976
+* validation set accuracy of 0.964
+* test set accuracy of 0.959
 
 I used an Iterative approach to finding a good model, so I will detail the answers to the iterative approach questions below.
 
@@ -142,7 +143,7 @@ If an iterative approach was chosen:
 
 Here are the five German traffic signs that I found on the web:
 
-Note that before these images were inferenced on, the appropriate resizing and preprocessing steps were done.
+Note that before these images were inferred on, the appropriate resizing and preprocessing steps were done.
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
