@@ -117,18 +117,24 @@ My final model results were:
 * validation set accuracy of 0.976
 * test set accuracy of 0.904
 
+I used an Iterative approach to finding a good model, so I will detail the answers to the iterative approach questions below.
+
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
+  * I started with a version of Yann LeCunn's network, which is a convolutional network followed by dense layers.
+  * I made some modifications right off the bat though, replacing the subsamples with maxpools.
 * What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
+  * The network was fairly mediocre; after >100 epochs training it had plateaued in the mid 70's
+* How was the architecture adjusted and why was it adjusted?
+  * I tweaked the convolution sizes quite a bit, before settling first on a (5,5) and then a (3,3)
+  * I tweaked the number of filters quite a bit before settling on 16 for the first convolution and 32 for the second one.
+  * I added two batch normalization steps after each set of convolution and Relu.
+  * I added three sets of dropout at a rate of 0.5 after the flatten layer, first dense layer, and second dense layer, since the model started to overfit on the training data
 * Which parameters were tuned? How were they adjusted and why?
+ * As mentioned above, I tweaked the filter sizes and number of filters in both convolutional layers. This was mostly a trial and error process of trying to find a better solution, since at first the model was really not doing well.
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
-
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
+  * For image classification problems, and in fact any kind of problem that uses images, convolutions have been shown as the most efficient and effective way to learn information and characteristics. This extends from our simple classification case all the way to semantic segmentation and object detection.
+  * Also, as mentioned in the architecture answer, dropout layers were added to help the model stop overfitting on the training data, making it less likely to overweight any one given node.
 
 ### Test a Model on New Images
 
@@ -144,7 +150,9 @@ Note that before these images were inferenced on, the appropriate resizing and p
 Some notes on why I chose these particular images:
 - Image 1: I chose this image because it is at an angle and has that watermark. I was curious to see if the watermark would through the network off
 - Image 2: I was curious to see if the buil-up of actual ice and snow (which one can imagine is a very real problem) would through off the network. As it happens, it did.
-- Image 3: 
+- Image 3: This sign looks similar to the slippery sign, so I was curious if it could make the distinction
+- Image 4: The shadow in this picture was meant to be a callenge
+- Image 5: This is also a darker and angled picture.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 

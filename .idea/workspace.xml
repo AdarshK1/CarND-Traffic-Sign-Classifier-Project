@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="17ab6603-d386-4837-b1b2-2cc99e3eacea" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Traffic_Sign_Classifier.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Traffic_Sign_Classifier.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/checkpoint" beforeDir="false" afterPath="$PROJECT_DIR$/checkpoint" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trained_model_0.ckpt.data-00000-of-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trained_model_0.ckpt.index" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trained_model_0.ckpt.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trained_model_10.ckpt.data-00000-of-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trained_model_10.ckpt.index" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trained_model_10.ckpt.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/writeup.md" beforeDir="false" afterPath="$PROJECT_DIR$/writeup.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,8 +18,8 @@
         <entry file="file://$PROJECT_DIR$/writeup.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-412">
-                <caret line="140" column="44" lean-forward="true" selection-start-line="140" selection-start-column="44" selection-end-line="140" selection-end-column="44" />
+              <first_editor relative-caret-position="533">
+                <caret line="135" column="307" selection-start-line="135" selection-start-column="307" selection-end-line="135" selection-end-column="307" />
               </first_editor>
               <second_editor />
             </state>
@@ -131,6 +123,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="2495" height="1084" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -188,11 +181,14 @@
     <entry file="file://$PROJECT_DIR$/images/priority_road_resized_.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitattributes">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/writeup.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-412">
-            <caret line="140" column="44" lean-forward="true" selection-start-line="140" selection-start-column="44" selection-end-line="140" selection-end-column="44" />
+          <first_editor relative-caret-position="533">
+            <caret line="135" column="307" selection-start-line="135" selection-start-column="307" selection-end-line="135" selection-end-column="307" />
           </first_editor>
           <second_editor />
         </state>
